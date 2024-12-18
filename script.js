@@ -30,7 +30,6 @@ if (accessToken) {
       localStorage.setItem('accessToken', accessToken); // Store token for later use
       fetchCurrentlyPlaying(accessToken);
       setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
-      window.location.hash = ''; // Clean URL by removing access token
     }
   } else {
     const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
@@ -85,16 +84,15 @@ function addSkippedSong(song) {
   const songData = {
     name: song.name,
     artist: song.artists[0].name,
-    albumCover: song.album.images[0].url,
+    albumCover: song.album.images[0].url
   };
 
   recentSkips.unshift(songData);
-
   if (recentSkips.length > maxSkippedSongs) {
     recentSkips.pop();
   }
 
-  localStorage.setItem('recentSkips', JSON.stringify(recentSkips));
+  localStorage.setItem('recentSkips', JSON.stringify(recentSkips)); // Save to localStorage
   renderSkippedSongs();
 }
 
@@ -105,10 +103,12 @@ function renderSkippedSongs() {
   recentSkips.forEach(song => {
     const skipItem = document.createElement('div');
     skipItem.classList.add('skip-item');
+
     skipItem.innerHTML = `
       <img src="${song.albumCover}" alt="Album Cover">
       <p>${song.name} by ${song.artist}</p>
     `;
+
     recentSkippedList.appendChild(skipItem);
   });
 }
@@ -128,4 +128,5 @@ function syncProgressBar(currentTime, duration) {
   progressTime.textContent = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds} | ${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
 }
 
+// Initially render the recently skipped songs
 renderSkippedSongs();
