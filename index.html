@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What Am I Listening To?</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1><img src="https://cdn.discordapp.com/attachments/1297246856148942850/1318439179285434368/79zPwbKkJGEAAAAAElFTkSuQmCC.png?ex=6762fc6b&is=6761aaeb&hm=697f33be7f6d587dc85b9a8ef3120f98924f137be50533c084a171566f117b0f&" class="spotify-logo" alt="Spotify Logo"> What Am I Listening To?</h1>
+
+  <div class="container">
+    <div class="playing-now">
+      <h2>Currently Playing</h2>
+      <p id="current-song">Loading...</p>
+      <p id="current-artist">Artist: Loading...</p>
+      <p id="current-album">Album: Loading...</p>
+      <img id="album-image" class="album-image" src="" alt="Album Image">
+      <div class="progress-bar" id="progress-bar">
+        <span id="progress-bar-fill"></span>
+      </div>
+      <div id="progress-time" class="progress-time">0:00 | 0:00</div>
+    </div>
+
+    <div class="recent-skips">
+      <h3>Recently Skipped Songs</h3>
+      <div id="recent-skipped-list">
+        <!-- Skipped songs will appear here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
