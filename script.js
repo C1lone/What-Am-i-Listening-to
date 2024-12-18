@@ -30,6 +30,7 @@ if (accessToken) {
       localStorage.setItem('accessToken', accessToken); // Store token for later use
       fetchCurrentlyPlaying(accessToken);
       setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
+      window.location.hash = ''; // Clean URL by removing access token
     }
   } else {
     const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
@@ -85,48 +86,3 @@ function addSkippedSong(song) {
     name: song.name,
     artist: song.artists[0].name,
     albumCover: song.album.images[0].url
-  };
-
-  recentSkips.unshift(songData);
-  if (recentSkips.length > maxSkippedSongs) {
-    recentSkips.pop();
-  }
-
-  localStorage.setItem('recentSkips', JSON.stringify(recentSkips)); // Save to localStorage
-  renderSkippedSongs();
-}
-
-function renderSkippedSongs() {
-  const recentSkippedList = document.getElementById('recent-skipped-list');
-  recentSkippedList.innerHTML = '';
-
-  recentSkips.forEach(song => {
-    const skipItem = document.createElement('div');
-    skipItem.classList.add('skip-item');
-
-    skipItem.innerHTML = `
-      <img src="${song.albumCover}" alt="Album Cover">
-      <p>${song.name} by ${song.artist}</p>
-    `;
-
-    recentSkippedList.appendChild(skipItem);
-  });
-}
-
-function syncProgressBar(currentTime, duration) {
-  const progressBar = document.getElementById('progress-bar-fill');
-  const progressTime = document.getElementById('progress-time');
-
-  const progress = (currentTime / duration) * 100;
-  progressBar.style.width = `${progress}%`;
-
-  const elapsedMinutes = Math.floor(currentTime / 60000);
-  const elapsedSeconds = Math.floor((currentTime % 60000) / 1000);
-  const totalMinutes = Math.floor(duration / 60000);
-  const totalSeconds = Math.floor((duration % 60000) / 1000);
-
-  progressTime.textContent = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds} | ${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
-}
-
-// Initially render the recently skipped songs
-renderSkippedSongs();
