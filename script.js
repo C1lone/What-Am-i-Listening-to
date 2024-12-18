@@ -91,16 +91,16 @@ function addSkippedSong(song) {
   recentSkips.unshift(songData);
 
   if (recentSkips.length > maxSkippedSongs) {
-    recentSkips.pop(); // Remove the oldest skipped song if the list exceeds max size
+    recentSkips.pop();
   }
 
-  localStorage.setItem('recentSkips', JSON.stringify(recentSkips)); // Save to localStorage
-  renderSkippedSongs(); // Re-render the list of skipped songs
+  localStorage.setItem('recentSkips', JSON.stringify(recentSkips));
+  renderSkippedSongs();
 }
 
 function renderSkippedSongs() {
   const recentSkippedList = document.getElementById('recent-skipped-list');
-  recentSkippedList.innerHTML = ''; // Clear existing list
+  recentSkippedList.innerHTML = '';
 
   recentSkips.forEach(song => {
     const skipItem = document.createElement('div');
@@ -128,5 +128,4 @@ function syncProgressBar(currentTime, duration) {
   progressTime.textContent = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds} | ${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
 }
 
-// Initially render the recently skipped songs
 renderSkippedSongs();
