@@ -1,5 +1,5 @@
 const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb';
-const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/'; // Updated URL
+const REDIRECT_URI = 'https://yourusername.github.io/your-repo-name/index.html'; // Replace with your GitHub Pages URL
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
   'user-read-recently-played',
@@ -10,13 +10,17 @@ const SCOPES = [
 
 let currentSongId = null;
 let songDuration = 0;
-let recentSkips = JSON.parse(localStorage.getItem('recentSkips')) || []; // Load recent skips from localStorage
+let recentSkips = [];
 const maxSkippedSongs = 5;
 
 const hash = window.location.hash;
-let accessToken = localStorage.getItem('accessToken') || ''; // Retrieve the access token from localStorage
+let accessToken = '';
 
-if (accessToken) {
+if (hash) {
+  const params = new URLSearchParams(hash.substring(1));
+  accessToken = params.get('access_token');
+  window.history.replaceState({}, document.title, REDIRECT_URI);
+
   fetchCurrentlyPlaying(accessToken);
   setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
 } else {
@@ -79,7 +83,6 @@ function addSkippedSong(song) {
     recentSkips.pop();
   }
 
-  localStorage.setItem('recentSkips', JSON.stringify(recentSkips)); // Save to localStorage
   renderSkippedSongs();
 }
 
