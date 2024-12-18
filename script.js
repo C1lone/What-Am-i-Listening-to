@@ -85,4 +85,48 @@ function addSkippedSong(song) {
   const songData = {
     name: song.name,
     artist: song.artists[0].name,
-    albumCover: song.album.images[0].url
+    albumCover: song.album.images[0].url,
+  };
+
+  recentSkips.unshift(songData);
+
+  if (recentSkips.length > maxSkippedSongs) {
+    recentSkips.pop(); // Remove the oldest skipped song if the list exceeds max size
+  }
+
+  localStorage.setItem('recentSkips', JSON.stringify(recentSkips)); // Save to localStorage
+  renderSkippedSongs(); // Re-render the list of skipped songs
+}
+
+function renderSkippedSongs() {
+  const recentSkippedList = document.getElementById('recent-skipped-list');
+  recentSkippedList.innerHTML = ''; // Clear existing list
+
+  recentSkips.forEach(song => {
+    const skipItem = document.createElement('div');
+    skipItem.classList.add('skip-item');
+    skipItem.innerHTML = `
+      <img src="${song.albumCover}" alt="Album Cover">
+      <p>${song.name} by ${song.artist}</p>
+    `;
+    recentSkippedList.appendChild(skipItem);
+  });
+}
+
+function syncProgressBar(currentTime, duration) {
+  const progressBar = document.getElementById('progress-bar-fill');
+  const progressTime = document.getElementById('progress-time');
+
+  const progress = (currentTime / duration) * 100;
+  progressBar.style.width = `${progress}%`;
+
+  const elapsedMinutes = Math.floor(currentTime / 60000);
+  const elapsedSeconds = Math.floor((currentTime % 60000) / 1000);
+  const totalMinutes = Math.floor(duration / 60000);
+  const totalSeconds = Math.floor((duration % 60000) / 1000);
+
+  progressTime.textContent = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds} | ${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
+}
+
+// Initially render the recently skipped songs
+renderSkippedSongs();
