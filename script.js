@@ -1,5 +1,5 @@
 const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb'; 
-const REDIRECT_URI = 'http://localhost:5500/Untitled-14.html'; 
+const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/';
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
   'user-read-recently-played',
