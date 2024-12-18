@@ -1,5 +1,5 @@
 const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb'; 
-const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/'; 
+const REDIRECT_URI = 'http://localhost:5500/Untitled-14.html'; 
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
   'user-read-recently-played',
@@ -24,8 +24,8 @@ if (hash) {
   fetchCurrentlyPlaying(accessToken);
   setInterval(() => fetchCurrentlyPlaying(accessToken), 1000); // Update every second
 } else {
-  const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
-  window.location = authUrl;
+  // If no token is found, redirect to the page you want
+  window.location = "https://c1lone.github.io/What-Am-i-Listening-to/";
 }
 
 async function fetchCurrentlyPlaying(token) {
