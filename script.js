@@ -1,5 +1,5 @@
-const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb'; 
-const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/';
+const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb';
+const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/'; // Replace with your GitHub Pages URL
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
   'user-read-recently-played',
@@ -10,8 +10,8 @@ const SCOPES = [
 
 let currentSongId = null;
 let songDuration = 0;
-let recentSkips = []; // Stores recently skipped songs
-const maxSkippedSongs = 5; // Max number of recently skipped songs
+let recentSkips = [];
+const maxSkippedSongs = 5;
 
 const hash = window.location.hash;
 let accessToken = '';
@@ -22,10 +22,10 @@ if (hash) {
   window.history.replaceState({}, document.title, REDIRECT_URI);
 
   fetchCurrentlyPlaying(accessToken);
-  setInterval(() => fetchCurrentlyPlaying(accessToken), 1000); // Update every second
+  setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
 } else {
-  // If no token is found, redirect to the page you want
-  window.location = "https://c1lone.github.io/What-Am-i-Listening-to/";
+  const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
+  window.location = authUrl;
 }
 
 async function fetchCurrentlyPlaying(token) {
@@ -44,7 +44,6 @@ async function fetchCurrentlyPlaying(token) {
       const newSongId = data.item.id;
       const progressMs = data.progress_ms;
 
-      // Detect if the user skipped the song
       if (newSongId !== currentSongId && currentSongId !== null) {
         addSkippedSong(data.item);
       }
@@ -79,9 +78,9 @@ function addSkippedSong(song) {
     albumCover: song.album.images[0].url
   };
 
-  recentSkips.unshift(songData); // Add to the beginning of the list
+  recentSkips.unshift(songData);
   if (recentSkips.length > maxSkippedSongs) {
-    recentSkips.pop(); // Remove the oldest if over limit
+    recentSkips.pop();
   }
 
   renderSkippedSongs();
@@ -89,7 +88,7 @@ function addSkippedSong(song) {
 
 function renderSkippedSongs() {
   const recentSkippedList = document.getElementById('recent-skipped-list');
-  recentSkippedList.innerHTML = ''; // Clear the list
+  recentSkippedList.innerHTML = '';
 
   recentSkips.forEach(song => {
     const skipItem = document.createElement('div');
