@@ -13,28 +13,15 @@ let songDuration = 0;
 let recentSkips = JSON.parse(localStorage.getItem('recentSkips')) || []; // Load recent skips from localStorage
 const maxSkippedSongs = 5;
 
-// Check if the user has an access token saved
+const hash = window.location.hash;
 let accessToken = localStorage.getItem('accessToken') || ''; // Retrieve the access token from localStorage
 
-// If there's an access token, fetch data
 if (accessToken) {
   fetchCurrentlyPlaying(accessToken);
   setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
 } else {
-  // If there's no access token, check the URL for a new token
-  const hash = window.location.hash;
-  if (hash) {
-    const params = new URLSearchParams(hash.substring(1));
-    accessToken = params.get('access_token');
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken); // Store token for later use
-      fetchCurrentlyPlaying(accessToken);
-      setInterval(() => fetchCurrentlyPlaying(accessToken), 1000);
-    }
-  } else {
-    const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
-    window.location = authUrl;
-  }
+  const authUrl = `${AUTH_ENDPOINT}?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=${SCOPES.join('%20')}`;
+  window.location = authUrl;
 }
 
 async function fetchCurrentlyPlaying(token) {
@@ -106,27 +93,27 @@ function renderSkippedSongs() {
 
     skipItem.innerHTML = `
       <img src="${song.albumCover}" alt="Album Cover">
-      <p>${song.name} by ${song.artist}</p>
+      <p>${song.name} - ${song.artist}</p>
     `;
 
     recentSkippedList.appendChild(skipItem);
   });
 }
 
-function syncProgressBar(currentTime, duration) {
-  const progressBar = document.getElementById('progress-bar-fill');
+function syncProgressBar(currentMs, durationMs) {
+  const progressBarFill = document.getElementById('progress-bar-fill');
   const progressTime = document.getElementById('progress-time');
 
-  const progress = (currentTime / duration) * 100;
-  progressBar.style.width = `${progress}%`;
+  const progressPercentage = (currentMs / durationMs) * 100;
+  progressBarFill.style.width = `${progressPercentage}%`;
 
-  const elapsedMinutes = Math.floor(currentTime / 60000);
-  const elapsedSeconds = Math.floor((currentTime % 60000) / 1000);
-  const totalMinutes = Math.floor(duration / 60000);
-  const totalSeconds = Math.floor((duration % 60000) / 1000);
+  const elapsedMinutes = Math.floor(currentMs / 60000);
+  const elapsedSeconds = Math.floor((currentMs % 60000) / 1000);
+  const formattedElapsedTime = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' : ''}${elapsedSeconds}`;
 
-  progressTime.textContent = `${elapsedMinutes}:${elapsedSeconds < 10 ? '0' + elapsedSeconds : elapsedSeconds} | ${totalMinutes}:${totalSeconds < 10 ? '0' + totalSeconds : totalSeconds}`;
+  const totalMinutes = Math.floor(durationMs / 60000);
+  const totalSeconds = Math.floor((durationMs % 60000) / 1000);
+  const formattedTotalTime = `${totalMinutes}:${totalSeconds < 10 ? '0' : ''}${totalSeconds}`;
+
+  progressTime.textContent = `${formattedElapsedTime} | ${formattedTotalTime}`;
 }
-
-// Initially render the recently skipped songs
-renderSkippedSongs();
