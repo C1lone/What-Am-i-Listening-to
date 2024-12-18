@@ -1,5 +1,5 @@
 const CLIENT_ID = '65314a2af1364abebdfc58c4094b76eb';
-const REDIRECT_URI = 'https://yourusername.github.io/your-repo-name/index.html'; // Replace with your GitHub Pages URL
+const REDIRECT_URI = 'https://c1lone.github.io/What-Am-i-Listening-to/'; // Replace with your GitHub Pages URL
 const AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SCOPES = [
   'user-read-recently-played',
